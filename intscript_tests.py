@@ -35,6 +35,12 @@ class IntscriptTests(unittest.TestCase):
             [1, 1, 2, 3, 5, 8, 13, 21, 34, 55, 24]
         )
 
+    def test_math_operators(slf):
+        slf.assertEqual(
+            compile_and_run('tests/math_operators.is'),
+            [2, 0, 2, 1, 2, 1, 2, 64]
+        )
+
 
 class FibonacciTests(unittest.TestCase):
     def setUp(slf):

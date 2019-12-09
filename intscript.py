@@ -25,16 +25,19 @@ class OP:
     ADD = '+'
     SUB = '-'
     MUL = '*'
+    POW = '**'
     ASSIGN = '='
     ASSIGN_ADD = '+='
     ASSIGN_SUB = '-='
     ASSIGN_MUL = '*='
+    ASSIGN_POW = '**='
 
 
 assign_ops = {
     OP.ASSIGN_ADD: OP.ADD,
     OP.ASSIGN_SUB: OP.SUB,
-    OP.ASSIGN_MUL: OP.MUL
+    OP.ASSIGN_MUL: OP.MUL,
+    OP.ASSIGN_POW: OP.POW
 }
 
 
@@ -696,6 +699,23 @@ class IntcodeGenerator:
                 slf.emit(OPCODE.ADD, left, scratch, result)
         elif op == OP.MUL:
             slf.emit(OPCODE.MULTIPLY, left, right, result)
+        elif op == OP.POW:
+            # the idea here is:
+            # counter, result = 0, 1
+            # while(cntr < right):
+            #   counter += 1
+            #   result *= left
+            # TODO: optimize for if right or left are constants
+            with slf.scratch() as counter, slf.scratch() as counterunder:
+                labelname = "POW" + str(len(slf.memory));
+                powlabel = IRLabel(labelname)
+                slf.visit_copy(counter, IRLiteral(0))
+                slf.visit_copy(result, IRLiteral(1))
+                slf.visit_label(labelname)
+                slf.visit_binary(counter, counter, OP.ADD, IRLiteral(1))
+                slf.visit_binary(result, result, OP.MUL, left)
+                slf.visit_binary(counterunder, counter, OP.LT, right)
+                slf.emit(OPCODE.JUMP_IF_TRUE, counterunder, powlabel)
         else:
             raise Exception(f"Unknown binary op '{op}'")
 

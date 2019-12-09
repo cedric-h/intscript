@@ -24,8 +24,10 @@ block_stmt: "{" stmt* "}"
          | rel_expr OP_REL add_expr -> binary_expr
 ?add_expr: mul_expr
          | add_expr OP_ADD mul_expr -> binary_expr
-?mul_expr: unary_expr
-         | mul_expr OP_MUL unary_expr -> binary_expr
+?mul_expr: pow_expr
+         | mul_expr OP_MUL pow_expr -> binary_expr
+?pow_expr: unary_expr
+         | pow_expr OP_POW unary_expr -> binary_expr
 ?unary_expr: postfix_expr
            | (OP_NOT | OP_ADD) unary_expr
 ?postfix_expr: primary_expr
@@ -46,7 +48,8 @@ OP_REL: "<=" | ">=" | "<" | ">"
 OP_EQL: "==" | "!="
 OP_ADD: "+" | "-"
 OP_MUL: "*"
-OP_ASSIGN: "=" | "+=" | "-=" | "*="
+OP_POW: "**"
+OP_ASSIGN: "=" | "+=" | "-=" | "*=" | "**="
 
 COMMENT: /#[^\n]*/
 

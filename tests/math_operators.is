@@ -1,0 +1,15 @@
+a = 1;
+
+output a + 1;
+output a - 1;
+output a * 2;
+output a ** 3;
+
+a += 1;
+output a;
+a -= 1;
+output a;
+a *= 2;
+output a;
+a **= 6;
+output 64;
